@@ -342,6 +342,32 @@ describe('initSingleton (DefaultAmplify)', () => {
 					);
 				});
 
+				it('should preserve current auth providers (default or otherwise) and configure provider with a new CookieStorage instance with a set domain', () => {
+					const libraryOptions = {
+						ssr: true,
+						cookieOptions: { domain: 'example.com' },
+					};
+					Amplify.configure(mockResourceConfig, libraryOptions);
+
+					expect(
+						mockCognitoUserPoolsTokenProviderSetAuthConfig,
+					).not.toHaveBeenCalled();
+					expect(MockCookieStorage).toHaveBeenCalledWith({
+						sameSite: 'lax',
+						domain: 'example.com',
+					});
+					expect(
+						mockCognitoUserPoolsTokenProviderSetKeyValueStorage,
+					).toHaveBeenCalledWith(mockCookieStorageInstance);
+					expect(mockAmplifySingletonConfigure).toHaveBeenCalledWith(
+						mockResourceConfig,
+						{
+							Auth: AmplifySingleton.libraryOptions.Auth,
+							...libraryOptions,
+						},
+					);
+				});
+
 				it('should preserve current auth providers (default or otherwise) and configure provider with defaultStorage', () => {
 					const libraryOptions = { ssr: false };
 					Amplify.configure(mockResourceConfig, libraryOptions);

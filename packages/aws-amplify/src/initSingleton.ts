@@ -38,7 +38,15 @@ export const DefaultAmplify = {
 		libraryOptions?: LibraryOptions,
 	): void {
 		const resolvedResourceConfig = parseAmplifyConfig(resourceConfig);
-		const cookieBasedKeyValueStorage = new CookieStorage({ sameSite: 'lax' });
+		let cookieBasedKeyValueStorage;
+		if (libraryOptions?.ssr && libraryOptions?.cookieOptions?.domain) {
+			cookieBasedKeyValueStorage = new CookieStorage({
+				sameSite: 'lax',
+				domain: libraryOptions.cookieOptions.domain,
+			});
+		} else {
+			cookieBasedKeyValueStorage = new CookieStorage({ sameSite: 'lax' });
+		}
 		const resolvedKeyValueStorage = libraryOptions?.ssr
 			? cookieBasedKeyValueStorage
 			: defaultStorage;

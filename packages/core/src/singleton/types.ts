@@ -56,6 +56,10 @@ export interface ResourcesConfig {
 	Geo?: GeoConfig;
 }
 
+export interface AuthCookieOptions {
+	domain?: string;
+}
+
 /**
  * Amplify library options type. Used to customize library behavior.
  */
@@ -64,6 +68,7 @@ export interface LibraryOptions {
 	Auth?: LibraryAuthOptions;
 	Storage?: LibraryStorageOptions;
 	ssr?: boolean;
+	cookieOptions?: AuthCookieOptions;
 }
 
 export {
